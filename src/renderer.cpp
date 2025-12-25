@@ -1,5 +1,6 @@
 #include "football_game/renderer.hpp"
 
+#include <array>
 #include <format>
 #include <iostream>
 
@@ -12,6 +13,10 @@ namespace {
 constexpr float kPlayerSizeCm = 60.0;
 constexpr float kBallSizeCm = 22.0;
 constexpr auto kBallColor = SKYBLUE;
+constexpr float kLabelOffset = 100.0f;
+constexpr float kLabelSize = 80.0f;
+
+constexpr std::array<Color, 3> kPlayerColors = {RED, GREEN, ORANGE};
 
 Camera2D GetCamera(const Pitch& pitch,
                    const Renderer::Window& window,
@@ -82,20 +87,27 @@ void Renderer::RenderFrame() {
   // Pitch
   DrawRectangle(0, 0, pitch_.length_cm, pitch_.width_cm, DARKGREEN);
 
-  // Player
-  DrawCircle(pitch_.player.position.x,
-             pitch_.width_cm - pitch_.player.position.y, kPlayerSizeCm / 2,
-             RED);
-  DrawText(std::format("{:.0f}, {:.0f} cm", pitch_.player.position.x,
-                       pitch_.player.position.y)
-               .c_str(),
-           pitch_.player.position.x + 100,
-           pitch_.width_cm - pitch_.player.position.y - 100, 80, RED);
-  DrawLine(pitch_.player.position.x, pitch_.width_cm - pitch_.player.position.y,
-           pitch_.player.position.x + pitch_.player.direction.x * 100.0f,
-           pitch_.width_cm -
-               (pitch_.player.position.y + pitch_.player.direction.y * 100.0f),
-           RED);
+  for (const auto& [id, player] : pitch_.players) {
+    // TODO: move to DrawPlayer()
+    // TODO: assign different color to teams
+    const auto color = kPlayerColors[id];
+    DrawCircle(player.position.x, pitch_.width_cm - player.position.y,
+               kPlayerSizeCm / 2, color);
+    DrawText(
+        std::format("{:.0f}, {:.0f} cm", player.position.x, player.position.y)
+            .c_str(),
+        player.position.x + kLabelOffset,
+        // TODO: move converting the axis direction to a clearly named helper
+        pitch_.width_cm - player.position.y - kLabelOffset, kLabelSize, color);
+    DrawLine(
+        // TODO: move converting the axis direction to a clearly named helper
+        player.position.x, pitch_.width_cm - player.position.y,
+        player.position.x + player.direction.x * kLabelOffset,
+        // TODO: move converting the axis direction to a clearly named helper
+        pitch_.width_cm -
+            (player.position.y + player.direction.y * kLabelOffset),
+        color);
+  }
 
   // Bot
   DrawCircle(pitch_.bot.position.x, pitch_.width_cm - pitch_.bot.position.y,
@@ -122,9 +134,10 @@ void Renderer::RenderFrame() {
 
   DrawText("0, 0 cm", 50, pitch_.width_cm - 100, 80, BLACK);
 
-  DrawLine(pitch_.ball.position.x, pitch_.width_cm - pitch_.ball.position.y,
-           pitch_.player.position.x, pitch_.width_cm - pitch_.player.position.y,
-           BLACK);
+  //   DrawLine(pitch_.ball.position.x, pitch_.width_cm -
+  //   pitch_.ball.position.y,
+  //            pitch_.player.position.x, pitch_.width_cm -
+  //            pitch_.player.position.y, BLACK);
 
   //   std::cout << "pitch_.player.direction: " << pitch_.player.direction << ",
   //   "

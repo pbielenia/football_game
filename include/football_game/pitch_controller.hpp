@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+#include <optional>
 #include <set>
 
 #include "football_game/helpers.hpp"
@@ -17,7 +19,7 @@ class PitchController {
     Kick,
   };
 
-  struct AgentDecisions {
+  struct AgentDecision {
     physics2d::Vector<float> player_move = {0, 0};
     bool kick = false;
   };
@@ -25,7 +27,7 @@ class PitchController {
   PitchController(Pitch& pitch);
 
   void ApplyUserInput(const std::set<UserInput>& user_input);
-  void ApplyAgentDecisions(const AgentDecisions& input);
+  void ApplyAgentDecisions(const std::map<unsigned, AgentDecision>& decisions);
   void UpdatePitch();
 
  private:
@@ -33,6 +35,7 @@ class PitchController {
   bool IsInField(const physics2d::Point<float>& point) const;
 
   Pitch& pitch_;
+  unsigned player_controlled_by_user_;
 };
 
 }  // namespace football

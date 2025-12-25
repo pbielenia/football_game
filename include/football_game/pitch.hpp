@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "football_game/helpers.hpp"
 
 namespace football {
@@ -31,7 +33,9 @@ struct Pitch {
   float width_cm;
   float length_cm;
   Ball ball;
-  Player player;
+  std::map<unsigned, Player> players;
+
+  // Player player;
   Player bot;
 };
 
