@@ -1,0 +1,27 @@
+Language: Cpp
+BasedOnStyle: Google
+
+# Custom preferences
+AllowAllConstructorInitializersOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortEnumsOnASingleLine: false
+AlignEscapedNewlines: Left
+AllowShortFunctionsOnASingleLine: Inline
+BraceWrapping:
+  AfterFunction: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+BinPackParameters: false
+ColumnLimit: 80
+ReflowComments:  true
+Standard: c++20
+
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^<boost|nlohmann|curl/.*>'
+    Priority: 2
+  - Regex: '^<.*>'
+    Priority: 1
+  - Regex: '^".*"'
+    Priority: 3
